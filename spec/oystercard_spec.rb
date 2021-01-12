@@ -31,12 +31,14 @@ describe OysterCard do
 
     describe '#deduct' do
 
-        it { is_expected.to respond_to(:deduct).with(1).argument }
+        it 'responds to #deduct' do
+            expect(respond_to subject.send(:deduct, 10))
+        end
 
         it 'checks that fare is correctly deducted from balance' do
             card = OysterCard.new
             card.top_up(10)
-            expect(card.deduct(10)).to eq 0
+            expect(card.send(:deduct, 10)).to eq 0
         end
 
     end
@@ -68,6 +70,10 @@ describe OysterCard do
             card.touch_in
             card.touch_out
             expect(card).not_to be_in_journey
+        end
+
+        it 'should deduct the minimum fare from the card balance' do
+            expect{subject.touch_out}.to change{subject.balance}.by(-1)
         end
 
     end
