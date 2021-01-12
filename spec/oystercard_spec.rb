@@ -25,7 +25,7 @@ describe OysterCard do
         it "raises an exception when the new balance exceeds the limit" do
           card = OysterCard.new
           card.top_up(described_class::CARD_LIMIT)
-          expect { card.top_up(1) }.to raise_error "Card limit of £#{described_class::CARD_LIMIT} reached"
+          expect { card.top_up(OysterCard::MIN_BALANCE) }.to raise_error "Card limit of £#{described_class::CARD_LIMIT} reached"
         end
     end
 
@@ -47,8 +47,13 @@ describe OysterCard do
 
         it 'updates the in_use variable to true' do
             card = OysterCard.new
+            card.top_up(OysterCard::MIN_BALANCE)
             card.touch_in
             expect(card).to be_in_journey
+        end
+
+        it 'raises an error when you .touch_in without the minimum balance' do
+          expect { subject.touch_in }.to raise_error 'Insufficient funds'
         end
 
     end
@@ -59,6 +64,7 @@ describe OysterCard do
 
         it 'updates the in_use variable to false' do
             card = OysterCard.new
+            card.top_up(OysterCard::MIN_BALANCE)
             card.touch_in
             card.touch_out
             expect(card).not_to be_in_journey
