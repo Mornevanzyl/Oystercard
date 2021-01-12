@@ -1,6 +1,11 @@
 require 'oystercard'
+# require_relative './station'
+
 
 describe OysterCard do
+  # subject(:oystercard) {described_class.new}
+  # let(:station) {double: station}
+
 
     it { is_expected.to respond_to(:balance) }
 
@@ -44,18 +49,26 @@ describe OysterCard do
     end
 
     describe '#touch_in' do
-
         it { is_expected.to respond_to(:touch_in) }
 
         it 'updates the in_use variable to true' do
             card = OysterCard.new
             card.top_up(OysterCard::MIN_BALANCE)
-            card.touch_in
+            card.touch_in("station")
             expect(card).to be_in_journey
         end
 
         it 'raises an error when you .touch_in without the minimum balance' do
-          expect { subject.touch_in }.to raise_error 'Insufficient funds'
+          expect { subject.touch_in("station") }.to raise_error 'Insufficient funds'
+        end
+
+        it "remembers the station that it .touch_in'd at" do
+          station = double('station')
+          allow(station).to receive(:name) { "Amersham"}
+          card = OysterCard.new
+          card.top_up(OysterCard::MIN_BALANCE)
+          card.touch_in("Amersham")
+          expect(card.entry_station).to eq station.name
         end
 
     end
@@ -65,9 +78,10 @@ describe OysterCard do
         it { is_expected.to respond_to(:touch_out) }
 
         it 'updates the in_use variable to false' do
+
             card = OysterCard.new
             card.top_up(OysterCard::MIN_BALANCE)
-            card.touch_in
+            card.touch_in("station")
             card.touch_out
             expect(card).not_to be_in_journey
         end
