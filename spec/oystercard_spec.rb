@@ -29,4 +29,52 @@ describe OysterCard do
         end
     end
 
+    describe '#deduct' do
+
+        it { is_expected.to respond_to(:deduct).with(1).argument }
+
+        it 'checks that fare is correctly deducted from balance' do
+            card = OysterCard.new
+            card.top_up(10)
+            expect(card.deduct(10)).to eq 0
+        end
+
+    end
+
+    describe '#touch_in' do
+
+        it { is_expected.to respond_to(:touch_in) }
+
+        it 'updates the in_use variable to true' do
+            card = OysterCard.new
+            card.touch_in
+            expect(card).to be_in_journey
+        end
+
+    end
+
+    describe '#touch_out' do
+
+        it { is_expected.to respond_to(:touch_out) }
+
+        it 'updates the in_use variable to false' do
+            card = OysterCard.new
+            card.touch_in
+            card.touch_out
+            expect(card).not_to be_in_journey
+        end
+
+    end
+
+    describe '#in_journey?' do
+
+        it { is_expected.to respond_to(:in_journey?) }
+
+        it 'returns true or false based on the in_use instance variable' do
+            card = OysterCard.new
+            expect(card.in_journey?).to eq false
+        end
+
+    end
+
 end
