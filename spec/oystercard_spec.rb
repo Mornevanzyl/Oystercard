@@ -17,6 +17,10 @@ describe OysterCard do
         
         it { is_expected.to respond_to(:journeys) }
 
+        it 'initialises journeys with an empty array' do
+            expect(oystercard.journeys).to be_empty
+        end
+
     end
 
     describe '#top_up' do
@@ -92,6 +96,11 @@ describe OysterCard do
 
         it 'should deduct the minimum fare from the card balance' do
             expect{oystercard.touch_out("station")}.to change{oystercard.balance}.by(-1)
+        end
+
+        it 'should increase the count of journeys array by 1' do
+            oystercard.touch_out("station")
+            expect(oystercard.journeys.count).to eq 1
         end
 
     end
