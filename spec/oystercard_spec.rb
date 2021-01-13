@@ -14,6 +14,8 @@ describe OysterCard do
         it 'has a numeric balance' do
             expect(oystercard.balance).to be_an(Numeric)
         end
+        
+        it { is_expected.to respond_to(:journeys) }
 
     end
 
@@ -68,26 +70,28 @@ describe OysterCard do
           card = OysterCard.new
           card.top_up(OysterCard::MIN_BALANCE)
           card.touch_in("Amersham")
-          expect(card.entry_station).to eq station.name
+          expect(card.journeys[-1][:entry_station]).to eq station.name
         end
 
     end
 
     describe '#touch_out' do
+        
+        before(:each) do     
+          oystercard.top_up(OysterCard::MIN_BALANCE)
+          oystercard.touch_in("station")
+        end
 
         it { is_expected.to respond_to(:touch_out) }
+        
+        it 'updates the in_journey to confirm trip status' do
 
-        it 'updates the in_use variable to false' do
-
-            card = OysterCard.new
-            card.top_up(OysterCard::MIN_BALANCE)
-            card.touch_in("station")
-            card.touch_out
-            expect(card).not_to be_in_journey
+            oystercard.touch_out("station")
+            expect(oystercard).not_to be_in_journey
         end
 
         it 'should deduct the minimum fare from the card balance' do
-            expect{subject.touch_out}.to change{subject.balance}.by(-1)
+            expect{oystercard.touch_out("station")}.to change{oystercard.balance}.by(-1)
         end
 
     end
@@ -97,10 +101,12 @@ describe OysterCard do
         it { is_expected.to respond_to(:in_journey?) }
 
         it 'returns true or false based on the in_use instance variable' do
-            card = OysterCard.new
-            expect(card.in_journey?).to eq false
+            subject.top_up(10)
+            subject.touch_in("station")
+            expect(subject.in_journey?).to eq true
         end
 
     end
+    
 
 end
