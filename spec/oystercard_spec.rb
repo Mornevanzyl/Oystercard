@@ -1,11 +1,11 @@
 require 'oystercard'
-# require_relative './station'
+require 'station'
 
 
 describe OysterCard do
   subject(:oystercard) {described_class.new}
-  let(:station) {double :station}
-
+#   let(:station) {double :station}
+    let(:station) {Station.new("Test Station", "1")}
 
     it { is_expected.to respond_to(:balance) }
 
@@ -70,11 +70,11 @@ describe OysterCard do
 
         it "remembers the station that it .touch_in'd at" do
         #   station = double('station')
-          allow(station).to receive(:name) { "Amersham"}
+        #   allow(station).to receive(:name) { "Amersham"}
           card = OysterCard.new
           card.top_up(OysterCard::MIN_BALANCE)
-          card.touch_in("Amersham")
-          expect(card.journeys[-1][:entry_station]).to eq station.name
+          card.touch_in(station.name)
+          expect(card.journeys[-1][:entry_station]).to eq "Test Station"
         end
 
     end
