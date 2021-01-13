@@ -3,8 +3,8 @@ require 'oystercard'
 
 
 describe OysterCard do
-  # subject(:oystercard) {described_class.new}
-  # let(:station) {double: station}
+  subject(:oystercard) {described_class.new}
+  let(:station) {double :station}
 
 
     it { is_expected.to respond_to(:balance) }
@@ -12,7 +12,7 @@ describe OysterCard do
     describe 'initialization' do
 
         it 'has a numeric balance' do
-            expect(subject.balance).to be_an(Numeric)
+            expect(oystercard.balance).to be_an(Numeric)
         end
 
     end
@@ -63,7 +63,7 @@ describe OysterCard do
         end
 
         it "remembers the station that it .touch_in'd at" do
-          station = double('station')
+        #   station = double('station')
           allow(station).to receive(:name) { "Amersham"}
           card = OysterCard.new
           card.top_up(OysterCard::MIN_BALANCE)
