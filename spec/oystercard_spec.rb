@@ -76,7 +76,7 @@ describe OysterCard do
         end
 
         it "remembers the station that it .touch_in'd at" do
-          expect(oystercard.journeys[-1][:entry_station].name).to eq "Test Station"
+          expect(oystercard.journeys[-1].name).to eq "Test Station"
         end
 
     end
