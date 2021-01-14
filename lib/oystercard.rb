@@ -29,7 +29,7 @@ class OysterCard
 
     def touch_out(station)
         deduct(1)
-        @journeys[-1][:exit_station] = station
+        @journeys[-1].exit_station = station
     end
 
     def in_journey?

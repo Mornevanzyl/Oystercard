@@ -73,7 +73,6 @@ describe OysterCard do
             expect { card.touch_in(station) }.to raise_error 'Insufficient funds'
         end
 
-
         it 'updates the in_use variable to true' do
             expect(oystercard).to be_in_journey
         end
@@ -82,30 +81,29 @@ describe OysterCard do
           expect(oystercard.journeys[-1].entry_station.name).to eq "Test Station"
         end
 
+        it 'should increase the count of journeys array by 1' do
+            expect(oystercard.journeys.count).to eq 1
+        end
+
     end
 
     describe '#touch_out' do
         
         before(:each) do     
           oystercard.top_up(OysterCard::MIN_BALANCE)
-          oystercard.touch_in("station")
+          oystercard.touch_in(station)
         end
 
         it { is_expected.to respond_to(:touch_out) }
         
         it 'updates the in_journey to confirm trip status' do
 
-            oystercard.touch_out("station")
+            oystercard.touch_out(station)
             expect(oystercard).not_to be_in_journey
         end
 
         it 'should deduct the minimum fare from the card balance' do
-            expect{oystercard.touch_out("station")}.to change{oystercard.balance}.by(-1)
-        end
-
-        it 'should increase the count of journeys array by 1' do
-            oystercard.touch_out("station")
-            expect(oystercard.journeys.count).to eq 1
+            expect{oystercard.touch_out(station)}.to change{oystercard.balance}.by(-1)
         end
 
     end
