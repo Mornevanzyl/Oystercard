@@ -5,6 +5,7 @@ require 'station'
 describe OysterCard do
   subject(:oystercard) {described_class.new}
 #   let(:station) {double :station}
+    let(:journey) {double :journey}
     let(:station) {Station.new("Test Station", "1")}
 
     it { is_expected.to respond_to(:balance) }
@@ -53,28 +54,29 @@ describe OysterCard do
         end
 
     end
-
+    
+    
     describe '#touch_in' do
+    
         it { is_expected.to respond_to(:touch_in) }
-
-        it 'updates the in_use variable to true' do
-            card = OysterCard.new
-            card.top_up(OysterCard::MIN_BALANCE)
-            card.touch_in("station")
-            expect(card).to be_in_journey
+    
+        # Move upon refactoring
+        it 'raises an error when you .touch_in without the minimum balance' do
+            oystercard.touch_out("Test Station")
+            expect { subject.touch_in("station") }.to raise_error 'Insufficient funds'
         end
 
-        it 'raises an error when you .touch_in without the minimum balance' do
-          expect { subject.touch_in("station") }.to raise_error 'Insufficient funds'
+        before(:each) do
+            oystercard.top_up(described_class::MIN_BALANCE)
+            oystercard.touch_in(station)
+        end
+
+        it 'updates the in_use variable to true' do
+            expect(oystercard).to be_in_journey
         end
 
         it "remembers the station that it .touch_in'd at" do
-        #   station = double('station')
-        #   allow(station).to receive(:name) { "Amersham"}
-          card = OysterCard.new
-          card.top_up(OysterCard::MIN_BALANCE)
-          card.touch_in(station.name)
-          expect(card.journeys[-1][:entry_station]).to eq "Test Station"
+          expect(oystercard.journeys[-1][:entry_station].name).to eq "Test Station"
         end
 
     end
