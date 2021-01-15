@@ -16,4 +16,7 @@ class Journey
     entry_station == nil || exit_station == nil ? PENALTY_FARE : MIN_FARE
   end
 
+  def start
+    Station.new
+  end
 end
