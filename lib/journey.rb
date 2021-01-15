@@ -13,7 +13,7 @@ class Journey
   end
 
   def fare
-    PENALTY_FARE
+    entry_station == nil || exit_station == nil ? PENALTY_FARE : MIN_FARE
   end
 
 end
